@@ -1,0 +1,255 @@
+declare i32 @getint()
+declare void @putint(i32)
+declare void @putch(i32)
+declare void @putstr(i8*)
+
+@interesting = dso_local global i32 1
+@MOD = dso_local constant i32 100005
+@SUM = dso_local constant i32 777777
+
+define dso_local i32 @one() #0 {
+	%1 = alloca i32
+	store i32 1, i32* %1
+	br label %2
+
+;<label>:2:
+	%3 = load i32, i32* %1
+	ret i32 %3
+}
+define dso_local i32 @one2(i32) #0 {
+	%2 = alloca i32
+	%3 = alloca i32
+	store i32 %0, i32* %3
+	%4 = load i32, i32* %3
+	%5 = load i32, i32* %3
+	%6 = mul i32 2, %5
+	%7 = add i32 %6, 1
+	%8 = icmp sgt i32 %4, %7
+	br i1 %8, label %9, label %11
+
+;<label>:9:						;if then
+	%10 = load i32, i32* %3
+	store i32 %10, i32* %2
+	br label %19
+
+;<label>:11:						;if end
+	%12 = call i32 @one()
+	%13 = call i32 @one()
+	%14 = call i32 @one()
+	%15 = sdiv i32 %13, %14
+	%16 = add i32 %12, %15
+	%17 = call i32 @one()
+	%18 = sub i32 %16, %17
+	store i32 %18, i32* %2
+	br label %19
+
+;<label>:19:
+	%20 = load i32, i32* %2
+	ret i32 %20
+}
+define dso_local i32 @tRue() #0 {
+	%1 = alloca i32
+	%2 = alloca i32
+	store i32 -99, i32* %2
+	br label %3
+
+;<label>:3:						;while body
+	%4 = load i32, i32* %2
+	%5 = call i32 @one()
+	%6 = icmp slt i32 %4, %5
+	br i1 %6, label %7, label %10
+
+;<label>:7:						;if then
+	%8 = load i32, i32* %2
+	%9 = add i32 %8, 1
+	store i32 %9, i32* %2
+	br label %12
+
+;<label>:10:						;if else
+	%11 = load i32, i32* %2
+	store i32 %11, i32* %1
+	br label %42
+
+;<label>:12:						;if end
+	br label %3
+
+;<label>:13:
+	%14 = load i32, i32* %2
+	%15 = call i32 @one()
+	%16 = call i32 @one2(i32 %15)
+	%17 = icmp slt i32 %14, %16
+	br i1 %17, label %18, label %21
+
+;<label>:18:						;if then
+	%19 = load i32, i32* %2
+	%20 = add i32 %19, 1
+	store i32 %20, i32* %2
+	br label %22
+
+;<label>:21:						;if else
+	br label %23					;break
+
+;<label>:22:						;if end
+	br label %13
+
+;<label>:23:						;while end
+	br label %24
+
+;<label>:24:						;while body
+	%25 = load i32, i32* %2
+	%26 = load i32, i32* %2
+	%27 = call i32 @one2(i32 %26)
+	%28 = add i32 %25, %27
+	%29 = call i32 @one()
+	%30 = add i32 %29, 1
+	%31 = call i32 @one2(i32 %30)
+	%32 = call i32 @one2(i32 %31)
+	%33 = icmp slt i32 %28, %32
+	br i1 %33, label %34, label %37
+
+;<label>:34:						;if then
+	%35 = load i32, i32* %2
+	%36 = add i32 %35, 1
+	store i32 %36, i32* %2
+	br label %39
+
+;<label>:37:						;if else
+	%38 = load i32, i32* %2
+	store i32 %38, i32* %1
+	br label %42
+
+;<label>:39:						;if end
+	br label %24
+
+;<label>:40:
+	%41 = load i32, i32* %2
+	store i32 %41, i32* %1
+	br label %42
+
+;<label>:42:
+	%43 = load i32, i32* %1
+	ret i32 %43
+}
+define dso_local i32 @fAlse() #0 {
+	%1 = alloca i32
+	%2 = alloca i32
+	%3 = call i32 @tRue()
+	store i32 %3, i32* %2
+	br label %4
+
+;<label>:4:						;while body
+	%5 = load i32, i32* %2
+	%6 = call i32 @tRue()
+	%7 = call i32 @tRue()
+	%8 = mul i32 %6, %7
+	%9 = add i32 %5, %8
+	store i32 %9, i32* %2
+	%10 = load i32, i32* %2
+	call void @putint(i32 %10)
+	call void @putch(i32 10)
+	%11 = load i32, i32* %2
+	%12 = icmp sgt i32 %11, 48
+	br i1 %12, label %13, label %14
+
+;<label>:13:						;if then
+	br label %15					;break
+
+;<label>:14:						;if end
+	br label %4
+
+;<label>:15:						;while end
+	%16 = load i32, i32* %2
+	%17 = call i32 @tRue()
+	%18 = srem i32 %16, %17
+	store i32 %18, i32* %1
+	br label %19
+
+;<label>:19:
+	%20 = load i32, i32* %1
+	ret i32 %20
+}
+
+define dso_local i32 @main() #0 {
+	%1 = alloca i32
+	%2 = alloca i32
+	%3 = call i32 @getint()
+	store i32 %3, i32* %2
+	br label %4
+
+;<label>:4:						;while cond
+	%5 = load i32, i32* %2
+	%6 = srem i32 %5, 100005
+	%7 = call i32 @tRue()
+	%8 = call i32 @fAlse()
+	%9 = add i32 %7, %8
+	%10 = icmp slt i32 %6, %9
+	br i1 %10, label %11, label %44
+
+;<label>:11:						;while body
+	%12 = call i32 @tRue()
+	call void @putint(i32 %12)
+	call void @putch(i32 10)
+	%13 = load i32, i32* %2
+	%14 = add i32 %13, 100
+	store i32 %14, i32* %2
+	br label %15
+
+;<label>:15:						;while cond
+	%16 = load i32, i32* %2
+	%17 = sdiv i32 %16, 100005
+	%18 = add i32 %17, 100005
+	%19 = call i32 @tRue()
+	%20 = call i32 @fAlse()
+	%21 = add i32 %19, %20
+	%22 = icmp slt i32 %18, %21
+	br i1 %22, label %23, label %43
+
+;<label>:23:						;while body
+	%24 = load i32, i32* %2
+	%25 = sub i32 %24, 1
+	store i32 %25, i32* %2
+	%26 = call i32 @tRue()
+	%27 = load i32, i32* %2
+	%28 = add i32 %26, %27
+	call void @putint(i32 %28)
+	call void @putch(i32 10)
+	br label %29
+
+;<label>:29:						;while cond
+	%30 = load i32, i32* %2
+	%31 = sdiv i32 %30, 100005
+	%32 = call i32 @tRue()
+	%33 = call i32 @fAlse()
+	%34 = add i32 %32, %33
+	%35 = icmp slt i32 %31, %34
+	br i1 %35, label %36, label %42
+
+;<label>:36:						;while body
+	%37 = load i32, i32* %2
+	%38 = sub i32 %37, 1
+	store i32 %38, i32* %2
+	%39 = call i32 @tRue()
+	%40 = load i32, i32* %2
+	%41 = add i32 %39, %40
+	call void @putint(i32 %41)
+	call void @putch(i32 10)
+	br label %29
+
+;<label>:42:						;while end
+	br label %15
+
+;<label>:43:						;while end
+	br label %4
+
+;<label>:44:						;while end
+	%45 = load i32, i32* %2
+	call void @putint(i32 %45)
+	call void @putch(i32 10)
+	store i32 0, i32* %1
+	br label %46
+
+;<label>:46:
+	%47 = load i32, i32* %1
+	ret i32 %47
+}
+
